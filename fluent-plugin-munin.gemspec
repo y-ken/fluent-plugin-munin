@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Kentaro Yoshida"]
   s.email       = ["y.ken.studio@gmail.com"]
   s.homepage    = "https://github.com/y-ken/fluent-plugin-munin"
-  s.summary     = %q{Fluentd Input plugin. fetch munin-node metrics data with custom intervals.}
+  s.summary     = %q{Fluentd Input plugin to fetch munin-node metrics data with custom intervals.}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

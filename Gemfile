@@ -1,5 +1,5 @@
 source "http://rubygems.org"
 
-# Specify your gem's dependencies in fluent-plugin-twitter.gemspec
+# Specify your gem's dependencies in fluent-plugin-munin.gemspec
 gemspec
 gem "munin-ruby"

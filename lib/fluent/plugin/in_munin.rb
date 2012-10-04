@@ -1,23 +1,25 @@
 module Fluent
   class MuninInput < Fluent::Input
     Plugin.register_input('munin', self)
-    require 'munin-ruby'
+
     def initialize
+      require 'munin-ruby'
       super
     end
 
     config_param :host, :string, :default => 'localhost'
     config_param :port, :integer, :default => 4949
-    config_param :interval, :integer, :default => 1
+    config_param :interval, :string, :default => '1m'
     config_param :tag_prefix, :string
-    config_param :service, :string, :default => nil
+    config_param :service, :string, :default => 'all'
     config_param :record_hostname, :string, :default => nil
 
     def configure(conf)
       super
       service_list = get_service_list
       $log.info "munin-node provides #{service_list.inspect}"
-      @services = @service.nil? ? service_list : @service.split(',')
+      @interval = Config.time_value(@interval)
+      @services = @service == 'all' ? service_list : @service.split(',')
       @record_hostname = @record_hostname || false
       @hostname = `hostname`.chomp
     end
@@ -28,7 +30,8 @@ module Fluent
 
     def shutdown
       disconnect
-      @thread.join
+      @munin.disconnect(false)
+      Thread.kill(@thread)
     end
 
     def run

@@ -2,7 +2,7 @@ fluent-plugin-munin
 ===================
 
 ## Component
-Fluentd Input plugin. fetch munin-node metrics data with custom intervals.
+Fluentd Input plugin to fetch munin-node metrics data with custom intervals.
 
 ## Installation
 
@@ -23,12 +23,12 @@ gem install fluent-plugin-munin
 `````
 <source>
   type            munin
-  server          localhost
-  port            4949
-  interval        10
-  tag_prefix      input.munin
-  service         cpu,df
-  record_hostname yes
+  server          localhost     # Optional (default: localhost)
+  port            4949          # Optional (default: 4949)
+  interval        10s           # Optional (default: 1m)
+  tag_prefix      input.munin   # Required
+  service         cpu,df        # Optional (not specify, fetch all enabled munin metrics)
+  record_hostname yes           # Optional (yes/no)
 </source>
 
 <match input.munin.*>
