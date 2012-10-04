@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fluent-plugin-munin (0.0.1)
+    fluent-plugin-munin (0.1.1)
       fluentd
 
 GEM

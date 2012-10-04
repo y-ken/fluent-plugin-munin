@@ -17,11 +17,11 @@ module Fluent
     def configure(conf)
       super
       service_list = get_service_list
-      $log.info "munin-node provides #{service_list.inspect}"
+      $log.info "munin-node #{@munin.nodes} provides #{service_list}"
       @interval = Config.time_value(@interval)
       @services = @service == 'all' ? service_list : @service.split(',')
       @record_hostname = @record_hostname || false
-      @hostname = `hostname`.chomp
+      @hostname = @munin.nodes
     end
 
     def start
