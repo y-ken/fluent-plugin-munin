@@ -18,10 +18,11 @@ module Fluent
       super
       @hostname = get_munin_hostname
       service_list = get_service_list
-      $log.info "munin-node #{@hostname} provides #{service_list}"
       @interval = Config.time_value(@interval)
       @services = @service == 'all' ? service_list : @service.split(',')
-      @record_hostname = @record_hostname || false
+      @record_hostname = Config.bool_value(@record_hostname) || false
+      $log.info "connecting munin-node: #{@hostname} #{service_list}"
+      $log.info "reading munin service: #{@service}"
     end
 
     def start
