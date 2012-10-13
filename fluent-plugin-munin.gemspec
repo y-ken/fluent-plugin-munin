@@ -17,4 +17,5 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   s.add_development_dependency "fluentd"
   s.add_runtime_dependency "fluentd"
+  s.add_runtime_dependency "munin-ruby"
 end
