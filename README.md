@@ -57,6 +57,13 @@ record_hostname: yes, nest_result: yes
 input.munin.cpu: {"hostname":"myhost.example.com","service":"cpu","data":{"user":"113183","nice":"340","system":"26584","idle":"74205345","iowait":"26134","irq":"1","softirq":"506","steal":"0","guest":"0"}}
 `````
 
+### MongoDB find example
+record_hostname: yes, nest_result: yes
+`````
+> use munin
+> db.cpu.find({ "data.iowait" : { $gt : "200000" } })
+`````
+
 ## TODO
 patches welcome!
 
