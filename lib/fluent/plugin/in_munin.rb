@@ -16,12 +16,12 @@ module Fluent
 
     def configure(conf)
       super
+      @hostname = get_munin_hostname
       service_list = get_service_list
-      $log.info "munin-node #{@munin.nodes.join(',')} provides #{service_list}"
+      $log.info "munin-node #{@hostname} provides #{service_list}"
       @interval = Config.time_value(@interval)
       @services = @service == 'all' ? service_list : @service.split(',')
       @record_hostname = @record_hostname || false
-      @hostname = @munin.nodes.join(',')
     end
 
     def start
@@ -56,6 +56,16 @@ module Fluent
     def disconnect
       @munin.disconnect
       @munin.connection.close
+    end
+
+    def get_munin_hostname
+      @munin ||= get_connection
+      begin
+        return @munin.nodes.join(',')
+      rescue Munin::ConnectionError
+        @munin = get_connection
+        retry
+      end
     end
 
     def get_service_list
