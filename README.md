@@ -31,7 +31,7 @@ gem install fluent-plugin-munin
   service         cpu          # Optional (not specify, fetch all enabled munin metrics)
   # inserting hostname into record.
   record_hostname yes          # Optional (yes/no)
-  # multi row results to be nested or separated record.
+  # metrics datasets to be nested or separated record.
   nest_result     no           # Optional (yes/no)
   nest_keyname    data         # Optional (default: result) 
 </source>
