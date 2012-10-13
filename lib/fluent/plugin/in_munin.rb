@@ -12,6 +12,8 @@ module Fluent
     config_param :interval, :string, :default => '1m'
     config_param :tag_prefix, :string
     config_param :service, :string, :default => 'all'
+    config_param :nest_result, :string, :default => nil
+    config_param :nest_key, :string, :default => 'result'
     config_param :record_hostname, :string, :default => nil
 
     def configure(conf)
@@ -21,6 +23,7 @@ module Fluent
       service_list = get_service_list
       @services = @service == 'all' ? service_list : @service.split(',')
       @record_hostname = Config.bool_value(@record_hostname) || false
+      @nest_result = Config.bool_value(@nest_result) || false
       $log.info "munin-node connected: #{@hostname} #{service_list}"
       $log.info "following munin-node service: #{@service}"
     end
@@ -42,7 +45,11 @@ module Fluent
           record = Hash.new
           record.store('hostname', @hostname) if @record_hostname
           record.store('service', key)
-          record.merge!(fetch(key).to_hash)
+          if (@nest_result)
+            record.store(@nest_key, fetch(key))
+          else
+            record.merge!(fetch(key).to_hash)
+          end
           Engine.emit(tag, Engine.now, record)
         end
         disconnect

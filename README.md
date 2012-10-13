@@ -23,12 +23,17 @@ gem install fluent-plugin-munin
 `````
 <source>
   type            munin
-  server          localhost     # Optional (default: localhost)
-  port            4949          # Optional (default: 4949)
-  interval        10s           # Optional (default: 1m)
-  tag_prefix      input.munin   # Required
-  service         cpu,df        # Optional (not specify, fetch all enabled munin metrics)
-  record_hostname yes           # Optional (yes/no)
+  host            localhost    # Optional (default: localhost)
+  port            4949         # Optional (default: 4949)
+  interval        10s          # Optional (default: 1m)
+  tag_prefix      input.munin  # Required
+  # specify munin plugin names by comma separated values.
+  service         cpu          # Optional (not specify, fetch all enabled munin metrics)
+  # inserting hostname into record.
+  record_hostname yes          # Optional (yes/no)
+  # multi row results to be nested or separated record.
+  nest_result     no           # Optional (yes/no)
+  nest_keyname    data         # Optional (default: result) 
 </source>
 
 <match input.munin.*>
@@ -36,9 +41,19 @@ gem install fluent-plugin-munin
 </match>
 `````
 
-### Output Sample
+### Output Sample (record_hostname: no, nest_result: no)
+`````
+input.munin.cpu: {"service":"cpu","user":"113183","nice":"340","system":"26584","idle":"74205345","iowait":"26134","irq":"1","softirq":"506","steal":"0","guest":"0"}
+`````
+
+### Output Sample (record_hostname: yes, nest_result: no)
 `````
 input.munin.cpu: {"hostname":"myhost.example.com","service":"cpu","user":"113183","nice":"340","system":"26584","idle":"74205345","iowait":"26134","irq":"1","softirq":"506","steal":"0","guest":"0"}
+`````
+
+### Output Sample (record_hostname: yes, nest_result: yes)
+`````
+input.munin.cpu: {"hostname":"myhost.example.com","service":"cpu","data":{"user":"113183","nice":"340","system":"26584","idle":"74205345","iowait":"26134","irq":"1","softirq":"506","steal":"0","guest":"0"}}
 `````
 
 ## TODO
