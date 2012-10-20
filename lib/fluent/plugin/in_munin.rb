@@ -14,6 +14,7 @@ module Fluent
     config_param :service, :string, :default => 'all'
     config_param :nest_result, :string, :default => nil
     config_param :nest_key, :string, :default => 'result'
+    config_param :convert_type, :string, :default => 'no'
     config_param :record_hostname, :string, :default => nil
 
     def configure(conf)
@@ -22,8 +23,9 @@ module Fluent
       @interval = Config.time_value(@interval)
       service_list = get_service_list
       @services = @service == 'all' ? service_list : @service.split(',')
-      @record_hostname = Config.bool_value(@record_hostname) || false
       @nest_result = Config.bool_value(@nest_result) || false
+      @convert_type = Config.bool_value(@convert_type) || false
+      @record_hostname = Config.bool_value(@record_hostname) || false
       $log.info "munin-node connected: #{@hostname} #{service_list}"
       $log.info "following munin-node service: #{@service}"
     end
@@ -90,11 +92,26 @@ module Fluent
       @munin ||= get_connection
       begin
         values = @munin.fetch(key)
+        return convert_type(values[key]) if @convert_type
         return values[key]
       rescue Munin::ConnectionError
         @munin = get_connection
         retry
       end
+    end
+
+    def convert_type(ary)
+      data = Hash.new
+      ary.each do |key,value|
+        if value == value.to_f.to_s
+          data.store(key, value.to_f)
+        elsif value == value.to_i.to_s
+          data.store(key, value.to_i)
+        else
+          data.store(key, value)
+        end
+      end
+      return data
     end
   end
 end

@@ -10,7 +10,8 @@ class MuninInputTest < Test::Unit::TestCase
     port                   4949
     interval               30
     tag_prefix             input.munin
-    record_hostname yes
+    record_hostname        yes
+    convert_type           no
   ]
 
   def create_driver(conf=CONFIG,tag='test')
@@ -26,9 +27,10 @@ class MuninInputTest < Test::Unit::TestCase
       port                   4949
       interval               30
       tag_prefix             input.munin
-      record_hostname yes
+      record_hostname        yes
+      convert_type           no
     ]
-    d.instance.inspect
+    p d.instance.inspect
     assert_equal 'localhost', d.instance.host
     assert_equal 4949, d.instance.port
     assert_equal 30, d.instance.interval

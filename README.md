@@ -30,9 +30,11 @@ gem install fluent-plugin-munin
   # specify munin plugin names by comma separated values.
   service         cpu          # Optional (not specify, fetch all enabled munin metrics)
   # inserting hostname into record.
-  record_hostname yes          # Optional (yes/no)
+  record_hostname yes          # Optional (default: no)
+  # converting values type from string to number.
+  convert_type    yes          # Optional (default: no)
   # metrics datasets to be nested or separated record.
-  nest_result     no           # Optional (yes/no)
+  nest_result     no           # Optional (default: no)
   nest_key        data         # Optional (default: result) 
 </source>
 
@@ -52,16 +54,21 @@ record_hostname: yes, nest_result: no
 input.munin.cpu: {"hostname":"myhost.example.com","service":"cpu","user":"113183","nice":"340","system":"26584","idle":"74205345","iowait":"26134","irq":"1","softirq":"506","steal":"0","guest":"0"}
 `````
 
+record_hostname: yes, nest_result: no, convert_type: yes #RECOMMEND
+`````
+input.munin.cpu: {"hostname":"myhost.example.com","service":"cpu","user":113183,"nice":340,"system":26584,"idle":74205345,"iowait":26134,"irq":1,"softirq":506,"steal":0,"guest":0}
+`````
+
 record_hostname: yes, nest_result: yes, nest_key: data
 `````
 input.munin.cpu: {"hostname":"myhost.example.com","service":"cpu","data":{"user":"113183","nice":"340","system":"26584","idle":"74205345","iowait":"26134","irq":"1","softirq":"506","steal":"0","guest":"0"}}
 `````
 
 ### MongoDB find example
-record_hostname: yes, nest_result: yes
+record_hostname: yes, nest_result: yes, convert_type: yes
 `````
 > use munin
-> db.cpu.find({ "data.iowait" : { $gt : "200000" } })
+> db.cpu.find({ "data.iowait" : { $gt : 200000 } })
 `````
 
 ## TODO
