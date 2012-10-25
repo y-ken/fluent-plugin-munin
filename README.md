@@ -49,6 +49,11 @@ record_hostname: no, nest_result: no  #DEFAULT
 input.munin.cpu: {"service":"cpu","user":"113183","nice":"340","system":"26584","idle":"74205345","iowait":"26134","irq":"1","softirq":"506","steal":"0","guest":"0"}
 `````
 
+tag_prefix: input.${hostname}-munin, record_hostname: yes, nest_result: no
+`````
+input.serv01.example.com-munin.cpu: {"hostname":"myhost.example.com","service":"cpu","user":"113183","nice":"340","system":"26584","idle":"74205345","iowait":"26134","irq":"1","softirq":"506","steal":"0","guest":"0"}
+`````
+
 record_hostname: yes, nest_result: no
 `````
 input.munin.cpu: {"hostname":"myhost.example.com","service":"cpu","user":"113183","nice":"340","system":"26584","idle":"74205345","iowait":"26134","irq":"1","softirq":"506","steal":"0","guest":"0"}
