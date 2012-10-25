@@ -73,7 +73,7 @@ record_hostname: yes, nest_result: yes, convert_type: yes
 
 ### Example
 
-* Example1: how to send munin metrics to treasuredata.
+* Example1: how to send munin metrics to treasuredata.<br>
 https://github.com/y-ken/fluent-plugin-munin/blob/master/example.conf
 
 ## TODO
