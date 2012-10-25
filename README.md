@@ -44,7 +44,7 @@ gem install fluent-plugin-munin
 `````
 
 ### Output Sample
-record_hostname: no, nest_result: no
+record_hostname: no, nest_result: no  #DEFAULT
 `````
 input.munin.cpu: {"service":"cpu","user":"113183","nice":"340","system":"26584","idle":"74205345","iowait":"26134","irq":"1","softirq":"506","steal":"0","guest":"0"}
 `````
@@ -54,7 +54,7 @@ record_hostname: yes, nest_result: no
 input.munin.cpu: {"hostname":"myhost.example.com","service":"cpu","user":"113183","nice":"340","system":"26584","idle":"74205345","iowait":"26134","irq":"1","softirq":"506","steal":"0","guest":"0"}
 `````
 
-record_hostname: yes, nest_result: no, convert_type: yes #RECOMMEND
+record_hostname: yes, nest_result: no, convert_type: yes  #RECOMMEND
 `````
 input.munin.cpu: {"hostname":"myhost.example.com","service":"cpu","user":113183,"nice":340,"system":26584,"idle":74205345,"iowait":26134,"irq":1,"softirq":506,"steal":0,"guest":0}
 `````
@@ -70,6 +70,11 @@ record_hostname: yes, nest_result: yes, convert_type: yes
 > use munin
 > db.cpu.find({ "data.iowait" : { $gt : 200000 } })
 `````
+
+### Example
+
+* Example1: how to send munin metrics to treasuredata.
+https://github.com/y-ken/fluent-plugin-munin/blob/master/example.conf
 
 ## TODO
 patches welcome!
