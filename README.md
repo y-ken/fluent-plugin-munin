@@ -86,7 +86,7 @@ https://github.com/y-ken/fluent-plugin-munin/blob/master/example2.conf
 
 
 ## TODO
-patches welcome!
+Pull requests are very welcome!!
 
 ## Copyright
 
