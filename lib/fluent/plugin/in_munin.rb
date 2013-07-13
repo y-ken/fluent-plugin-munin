@@ -38,12 +38,12 @@ module Fluent
 
         service_list = get_service_list
         @services = @service == 'all' ? service_list : @service.split(',')
-        $log.info "munin-node connected: #{@hostname} #{service_list}"
-        $log.info "following munin-node service: #{@service}"
-      rescue => e
-        $log.warn "munin: failed to configure",  :error_class=>e.class, :error=>e.message, :retry_interval=>retry_interval
-        retry_interval *= 2 if retry_interval < max_retry_interval
+        $log.info "munin: munin-node ready ", :hostname=>@hostname, :service_list=>service_list
+        $log.info "munin: activating service ", :service=>@services
+        rescue => e
+        $log.warn "munin: connect failed ",  :error_class=>e.class, :error=>e.message, :retry_interval=>retry_interval
         sleep retry_interval
+        retry_interval *= 2 if retry_interval < max_retry_interval
         retry
       end
     end
