@@ -38,7 +38,7 @@ module Fluent
         @services = @service == 'all' ? service_list : @service.split(',')
         $log.info "munin: munin-node ready ", :hostname=>@hostname, :service_list=>service_list
         $log.info "munin: activating service ", :service=>@services
-        rescue => e
+      rescue => e
         $log.warn "munin: connect failed ",  :error_class=>e.class, :error=>e.message, :retry_interval=>retry_interval
         sleep retry_interval
         retry_interval *= 2 if retry_interval < max_retry_interval
