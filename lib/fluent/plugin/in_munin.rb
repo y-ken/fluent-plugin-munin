@@ -57,21 +57,9 @@ module Fluent
     end
 
     def run
-      loop do 
-        @services.each do |key|
-          tag = "#{@tag_prefix}.#{key}".gsub('__HOSTNAME__', @hostname).gsub('${hostname}', @hostname)
-          record = Hash.new
-          record.store('hostname', @hostname) if @record_hostname
-          record.store('service', key)
-          if (@nest_result)
-            record.store(@nest_key, fetch(key))
-          else
-            record.merge!(fetch(key).to_hash)
-          end
-          Engine.emit(tag, Engine.now, record)
-        end
-        disconnect
       configure_munin
+      loop do
+        emit_collected_service
         sleep @interval
       end
     end
@@ -85,20 +73,27 @@ module Fluent
       @munin.connection.close
     end
 
-    def get_munin_hostname
-      @munin ||= get_connection
-      begin
-        return @munin.nodes.join(',')
-      rescue Munin::ConnectionError
-        @munin = get_connection
-        retry
-      end
     def get_service_list
       @munin = get_connection
       return @munin.list
     end
 
+    def emit_collected_service
+      @services.each do |key|
+        tag = "#{@tag_prefix}.#{key}".gsub(/(\${[a-z]+}|__[A-Z]+__)/, get_placeholder)
+        record = Hash.new
+        record.store('hostname', @hostname) if @record_hostname
+        record.store('service', key)
+        if (@nest_result)
+          record.store(@nest_key, fetch(key))
+        else
+          record.merge!(fetch(key).to_hash)
+        end
+        Engine.emit(tag, Engine.now, record)
       end
+      disconnect
+      rescue => e
+      $log.warn "munin: fetch failed ",  :error_class=>e.class, :error=>e.message
     end
 
     def fetch(key)
@@ -120,6 +115,13 @@ module Fluent
         end
       end
       return data
+    end
+    
+    def get_placeholder
+      return {
+        '__HOSTNAME__' => @hostname,
+        '${hostname}' => @hostname,
+      }
     end
   end
 end
