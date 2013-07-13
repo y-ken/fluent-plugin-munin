@@ -19,15 +19,33 @@ module Fluent
 
     def configure(conf)
       super
-      @hostname = get_munin_hostname
+
       @interval = Config.time_value(@interval)
-      service_list = get_service_list
-      @services = @service == 'all' ? service_list : @service.split(',')
       @nest_result = Config.bool_value(@nest_result) || false
       @convert_type = Config.bool_value(@convert_type) || false
       @record_hostname = Config.bool_value(@record_hostname) || false
-      $log.info "munin-node connected: #{@hostname} #{service_list}"
-      $log.info "following munin-node service: #{@service}"
+
+      self
+    end
+
+    def delayed_configure
+      retry_interval = 30
+      max_retry_interval = 3840
+
+      begin
+        @munin = get_connection
+        @hostname = @munin.nodes.join(',')
+
+        service_list = get_service_list
+        @services = @service == 'all' ? service_list : @service.split(',')
+        $log.info "munin-node connected: #{@hostname} #{service_list}"
+        $log.info "following munin-node service: #{@service}"
+      rescue => e
+        $log.warn "munin: failed to configure",  :error_class=>e.class, :error=>e.message, :retry_interval=>retry_interval
+        retry_interval *= 2 if retry_interval < max_retry_interval
+        sleep retry_interval
+        retry
+      end
     end
 
     def start
@@ -41,6 +59,7 @@ module Fluent
     end
 
     def run
+      delayed_configure
       loop do 
         @services.each do |key|
           tag = "#{@tag_prefix}.#{key}".gsub('__HOSTNAME__', @hostname).gsub('${hostname}', @hostname)
