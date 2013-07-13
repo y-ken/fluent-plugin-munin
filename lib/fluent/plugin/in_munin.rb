@@ -30,7 +30,7 @@ module Fluent
 
     def configure_munin
       retry_interval = 30
-      max_retry_interval = 3840
+      max_retry_interval = retry_interval * 2 ** (8 - 1)
       begin
         @munin = get_connection
         @hostname = @munin.nodes.join(',')
