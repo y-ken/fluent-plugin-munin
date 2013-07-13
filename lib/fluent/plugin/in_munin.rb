@@ -28,14 +28,12 @@ module Fluent
       self
     end
 
-    def delayed_configure
+    def configure_munin
       retry_interval = 30
       max_retry_interval = 3840
-
       begin
         @munin = get_connection
         @hostname = @munin.nodes.join(',')
-
         service_list = get_service_list
         @services = @service == 'all' ? service_list : @service.split(',')
         $log.info "munin: munin-node ready ", :hostname=>@hostname, :service_list=>service_list
@@ -59,7 +57,6 @@ module Fluent
     end
 
     def run
-      delayed_configure
       loop do 
         @services.each do |key|
           tag = "#{@tag_prefix}.#{key}".gsub('__HOSTNAME__', @hostname).gsub('${hostname}', @hostname)
@@ -74,6 +71,7 @@ module Fluent
           Engine.emit(tag, Engine.now, record)
         end
         disconnect
+      configure_munin
         sleep @interval
       end
     end
