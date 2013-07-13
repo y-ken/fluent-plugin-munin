@@ -95,28 +95,19 @@ module Fluent
         @munin = get_connection
         retry
       end
+    def get_service_list
+      @munin = get_connection
+      return @munin.list
     end
 
-    def get_service_list
-      @munin ||= get_connection
-      begin
-        return @munin.list 
-      rescue Munin::ConnectionError
-        @munin = get_connection
-        retry
       end
     end
 
     def fetch(key)
-      @munin ||= get_connection
-      begin
-        values = @munin.fetch(key)
-        return convert_type(values[key]) if @convert_type
-        return values[key]
-      rescue Munin::ConnectionError
-        @munin = get_connection
-        retry
-      end
+      @munin = get_connection
+      values = @munin.fetch(key)
+      return convert_type(values[key]) if @convert_type
+      return values[key]
     end
 
     def convert_type(ary)
