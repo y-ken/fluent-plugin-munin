@@ -3,11 +3,11 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "fluent-plugin-munin"
-  s.version     = "0.3.1"
+  s.version     = "0.3.2"
   s.authors     = ["Kentaro Yoshida"]
   s.email       = ["y.ken.studio@gmail.com"]
   s.homepage    = "https://github.com/y-ken/fluent-plugin-munin"
-  s.summary     = %q{Fluentd Input plugin to fetch munin-node metrics data with custom intervals.}
+  s.summary     = %q{Fluentd Input plugin to fetch munin-node metrics data with custom intervals. It supports all of munin plugins.}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
