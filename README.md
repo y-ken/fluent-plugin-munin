@@ -1,4 +1,4 @@
-fluent-plugin-munin
+fluentd-plugin-munin
 ===================
 
 ## Component
@@ -9,7 +9,7 @@ Fluentd Input plugin to fetch munin-node metrics data with custom intervals.
 ### native gem
 
 `````
-gem install fluent-plugin-munin
+gem install fluentd-plugin-munin
 `````
 
 ### td-agent gem
