@@ -1,6 +1,6 @@
 module Fluentd::Plugin
   class MuninInput < Fluentd::Input
-    Plugin.register_input('munin', self)
+    Fluentd::Plugin.register_input('munin', self)
 
     def initialize
       require 'munin-ruby'
