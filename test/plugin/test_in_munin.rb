@@ -30,7 +30,6 @@ class MuninInputTest < Test::Unit::TestCase
       record_hostname        yes
       convert_type           no
     ]
-    p d.instance.inspect
     assert_equal 'localhost', d.instance.host
     assert_equal 4949, d.instance.port
     assert_equal 30, d.instance.interval
