@@ -2,6 +2,11 @@ module Fluent
   class MuninInput < Fluent::Input
     Plugin.register_input('munin', self)
 
+    # Define `router` method of v0.12 to support v0.10 or earlier
+    unless method_defined?(:router)
+      define_method("router") { Fluent::Engine }
+    end
+
     def initialize
       require 'munin-ruby'
       super
@@ -89,7 +94,7 @@ module Fluent
         else
           record.merge!(fetch(key).to_hash)
         end
-        Engine.emit(tag, Engine.now, record)
+        router.emit(tag, Engine.now, record)
       end
       disconnect
       rescue => e
