@@ -1,3 +1,5 @@
+require 'fluent/input'
+
 module Fluent
   class MuninInput < Fluent::Input
     Plugin.register_input('munin', self)
