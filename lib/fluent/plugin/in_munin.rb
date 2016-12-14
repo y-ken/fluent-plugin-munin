@@ -2,6 +2,11 @@ module Fluent
   class MuninInput < Fluent::Input
     Plugin.register_input('munin', self)
 
+    # To support log_level option implemented by Fluentd v0.10.43
+    unless method_defined?(:log)
+      define_method("log") { $log }
+    end
+
     # Define `router` method of v0.12 to support v0.10 or earlier
     unless method_defined?(:router)
       define_method("router") { Fluent::Engine }
@@ -41,10 +46,10 @@ module Fluent
         @hostname = @munin.nodes.join(',')
         service_list = get_service_list
         @services = @service == 'all' ? service_list : @service.split(',')
-        $log.info "munin: munin-node ready ", :hostname=>@hostname, :service_list=>service_list
-        $log.info "munin: activating service ", :service=>@services
+        log.info "munin: munin-node ready ", :hostname=>@hostname, :service_list=>service_list
+        log.info "munin: activating service ", :service=>@services
       rescue => e
-        $log.warn "munin: connect failed ",  :error_class=>e.class, :error=>e.message, :retry_interval=>retry_interval
+        log.warn "munin: connect failed ",  :error_class=>e.class, :error=>e.message, :retry_interval=>retry_interval
         sleep retry_interval
         retry_interval *= 2 if retry_interval < max_retry_interval
         retry
@@ -98,7 +103,7 @@ module Fluent
       end
       disconnect
       rescue => e
-      $log.warn "munin: fetch failed ",  :error_class=>e.class, :error=>e.message
+      log.warn "munin: fetch failed ",  :error_class=>e.class, :error=>e.message
     end
 
     def fetch(key)
