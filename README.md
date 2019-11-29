@@ -17,6 +17,11 @@ gem install fluent-plugin-munin
 /usr/lib64/fluent/ruby/bin/fluent-gem install fluent-plugin-munin
 `````
 
+### td-agent2 gem
+`````
+/usr/sbin/td-agent-gem install fluent-plugin-munin
+`````
+
 ## Configuration
 
 ### Config Sample
